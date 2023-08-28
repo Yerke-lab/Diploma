@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education</title>
+    <link rel="stylesheet" href="css/test.css">
+</head>
+<body>
+    <header class="fixed">
+        <div id="logo" onclick="slowScroll('#top')">
+            <span> <a href="index.html">На главную</a></span>
+        </div>
+    </header>
+        <div>
+            <script>
+                function hideNoDHTML() {
+                    document.getElementById('nodhtml').style.display = 'none';
+                    showQuestions();
+                }
+    
+                function showQuestions() {
+                    document.getElementById('questions').style.display = 'block';
+                    document.getElementById('results').style.display = 'none';
+                }
+    
+                function showResults() {
+                    var allQuestions = document.forms['testForm'].elements;
+                    var totalQuestions = 10; // Общее количество вопросов
+                    var rightAnsweredQuestions = 0;
+                    var resultText = '<br/><br/>';
+                
+                    for (var j = 0; j < totalQuestions; j++) {
+                        var questionIndex = j + 1;
+                        var questionElement = document.querySelector('input[type="radio"][name="question' + questionIndex + '"]:checked');
+                
+                        if (questionElement !== null && questionElement.getAttribute('data-correct') === 'true') {
+                            rightAnsweredQuestions++;
+                            resultText += 'Вопрос ' + questionIndex + ': <strong>Правильно</strong><br/>';
+                        } else {
+                            resultText += 'Вопрос ' + questionIndex + ': <strong>Неправильно</strong><br/>';
+                        }
+                    }
+                
+                    var isFormValid = validateForm();
+                    if (!isFormValid) {
+                        return;
+                    }
+                
+                    document.getElementById('questions').style.display = 'none';
+                    document.getElementById('results').style.display = 'block';
+                
+                    var resultsElement = document.getElementById('results');
+                    resultText += '<br/>Правильные ответы: ' + rightAnsweredQuestions + ' из ' + totalQuestions + '.<br/>';
+                
+                    if (rightAnsweredQuestions === totalQuestions) {
+                        resultText += 'Поздравляем с отличным результатом! Оценка 5.';
+                    }
+                
+                    resultsElement.innerHTML = '<h2>Результаты теста</h2>\n<p>' + resultText + '</p>';
+                
+                    // Отправка результатов на сервер
+                    var form = document.getElementById('testForm');
+                    var formData = new FormData(form);
+                    formData.append('score', rightAnsweredQuestions); // Добавляем счет в FormData
+                
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'handler.php', true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            // Обработка ответа сервера, если необходимо
+                        }
+                    };
+                    xhr.send(formData);
+                }
+                
+                
+                         
+                function validateForm() {
+                    var allQuestions = document.forms['testForm'].elements;
+                    var questionNames = [];
+                    var unansweredQuestions = 0;
+                
+                    // Получаем список имен вопросов
+                    for (var i = 0; i < allQuestions.length; i++) {
+                        var element = allQuestions[i];
+                        if (element.type === 'radio' && !questionNames.includes(element.name)) {
+                            questionNames.push(element.name);
+                        }
+                    }
+                
+                    // Проверяем, был ли отмечен ответ для каждого вопроса
+                    for (var j = 0; j < questionNames.length; j++) {
+                        var questionName = questionNames[j];
+                        var checkedOptions = document.querySelectorAll('input[type=radio][name="' + questionName + '"]:checked');
+                
+                        if (checkedOptions.length === 0) {
+                            unansweredQuestions++;
+                        }
+                    }
+                
+                    if (unansweredQuestions > 0) {
+                        alert('Пожалуйста, ответьте на все вопросы теста.');
+                        return false;
+                    }
+                
+                    return true;
+                }
+                
+                
+            </script>
+        </div>
+    <br>
+
+    <div id="top">
+        <h2>Тесты по истории</h2>
+    </div>
+    <div id="test" onload="hideNoDHTML();">
+        <div id="nodhtml"></div>
+     
+        <div id="questions"> <br>
+            <form id="testForm" action="" method="post">
+                <h3>1. Период мезолита относится к </h3>
+                <p><input type="radio" name="question1" id="choice11" data-correct="false"/> <label for="choice11">800-140 тыс лет до н.э.</label></p>
+                <p><input type="radio" name="question1" id="choice12" data-correct="true"/> <label for="choice12">12-5 тыс лет до н.э.</label></p>
+                <p><input type="radio" name="question1" id="choice13" data-correct="false"/> <label for="choice13">140-40 тыс лет до н.э.</label></p>
+                <p><input type="radio" name="question1" id="choice14" data-correct="false"/> <label for="choice14">5-3 тыс лет до н.э.</label></p><br>
+         
+                <h3>2. Историческая общность «родовая община» относится к эпохе:</h3>
+                <p><input type="radio" name="question2" id="choice21" data-correct="true"/> <label for="choice21">позднего палеолита</label></p>
+                <p><input type="radio" name="question2" id="choice22" data-correct="false"/> <label for="choice22">раннего палеолита</label></p>
+                <p><input type="radio" name="question2" id="choice23" data-correct="false"/> <label for="choice23">бронзового века</label></p>
+                <p><input type="radio" name="question2" id="choice24" data-correct="false"/> <label for="choice24">неолита</label></p><br>
+                
+                <h3>3. Ловушки и силки появляются в период:</h2>
+                <p><input type="radio" name="question3" id="choice31" data-correct="false"/> <label for="choice31">среднего палеолита</label></p>
+                <p><input type="radio" name="question3" id="choice32" data-correct="true"/> <label for="choice32">мезолита</label></p>
+                <p><input type="radio" name="question3" id="choice33" data-correct="false"/> <label for="choice33">неолита</label></p>
+                <p><input type="radio" name="question3" id="choice34" data-correct="false"/> <label for="choice34">нижнего палеолита</label></p><br>
+                
+                <h3>4. Период неолита относится к:</h3>
+                <p><input type="radio" name="question4" id="choice41" data-correct="false"/> <label for="choice41">140-40 тыс лет до н.э.</label></p>
+                <p><input type="radio" name="question4" id="choice42" data-correct="false"/> <label for="choice42">12-5 тыс лет до н.э.</label></p>
+                <p><input type="radio" name="question4" id="choice43" data-correct="false"/> <label for="choice43">800-140 тыс лет до н.э.</label></p>
+                <p><input type="radio" name="question4" id="choice44" data-correct="true"/> <label for="choice44">5-3 тыс лет до н.э.</label></p><br>
+                
+                <h3>5. Для неолитического  погребения у села Железинки найденого в Северном Казахстане характерно:</h3>
+                <p><input type="radio" name="question5" id="choice51" data-correct="false"/> <label for="choice51">сложные деревянные конструкции</label></p>
+                <p><input type="radio" name="question5" id="choice52" data-correct="false"/> <label for="choice52">могилы с каменными плитами</label></p>
+                <p><input type="radio" name="question5" id="choice53" data-correct="false"/> <label for="choice53">строительство каменного склепа</label></p>
+                <p><input type="radio" name="question5" id="choice54" data-correct="true"/> <label for="choice54">кремация трупа</label></p><br>
+                 
+                <h3>6. Рубило является орудием труда периода:</h3>
+                <p><input type="radio" name="question6" id="choice61" data-correct="false"/> <label for="choice61">мезолита</label></p>
+                <p><input type="radio" name="question6" id="choice62" data-correct="false"/> <label for="choice62">неолита</label></p>
+                <p><input type="radio" name="question6" id="choice63" data-correct="false"/> <label for="choice63">верхнего палеолита</label></p>
+                <p><input type="radio" name="question6" id="choice64" data-correct="true"/> <label for="choice64">нижнего палеолита</label></p><br>
+                 
+                <h3>7. Керамику древние люди  начали изготавливать в период:</h3>
+                <p><input type="radio" name="question7" id="choice71" data-correct="true"/> <label for="choice71">среднего палеолита</label></p>
+                <p><input type="radio" name="question7" id="choice72" data-correct="false"/> <label for="choice72">нижнего палеолита</label></p>
+                <p><input type="radio" name="question7" id="choice73" data-correct="false"/> <label for="choice73">верхнего палеолита</label></p>
+                <p><input type="radio" name="question7" id="choice74" data-correct="false"/> <label for="choice74">неолита</label></p>
+
+                <h3>8. Искусство у древних людей  зарождается в период:</h3>
+                <p><input type="radio" name="question8" id="choice81" data-correct="true"/> <label for="choice81">верхнего палеолита</label></p>
+                <p><input type="radio" name="question8" id="choice82" data-correct="false"/> <label for="choice82">нижнего палеолита</label></p>
+                <p><input type="radio" name="question8" id="choice83" data-correct="false"/> <label for="choice83">среднего палеолита</label></p>
+                <p><input type="radio" name="question8" id="choice84" data-correct="false"/> <label for="choice84">неолита</label></p>
+                 
+                <h3>9. Один из предков человека кроманьенец найден:</h3>
+                <p><input type="radio" name="question9" id="choice91" data-correct="false"/> <label for="choice91">Кении</label></p>
+                <p><input type="radio" name="question9" id="choice92" data-correct="false"/> <label for="choice92">Германии</label></p>
+                <p><input type="radio" name="question9" id="choice93" data-correct="false"/> <label for="choice93">Китае</label></p>
+                <p><input type="radio" name="question9" id="choice94" data-correct="true"/> <label for="choice94">Франции</label></p>
+                     
+                <h3>10. Резец как орудие труда  был наиболее распространенным в период:</h3>
+                <p><input type="radio" name="question10" id="choice101" data-correct="true"/> <label for="choice101">верхнего палеолита</label></p>
+                <p><input type="radio" name="question10" id="choice102" data-correct="false"/> <label for="choice102">мезолита</label></p>
+                <p><input type="radio" name="question10" id="choice103" data-correct="false"/> <label for="choice103">нижнего палеолита</label></p>
+                <p><input type="radio" name="question10" id="choice104" data-correct="false"/> <label for="choice104">неолита</label></p>
+                         
+                <p class="btn btn-primary">
+                    <input type="button" value="Показать мой результат" onclick="showResults();" />
+                    <input type="reset" value="Очистить форму" />
+                </p>
+            </form>
+        </div>
+        <div id="results"></div>
+        <br/><br/>
+    </div> 
+</body>
+</html>

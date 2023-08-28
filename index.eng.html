@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education</title>
+    <link rel="stylesheet" href="css/test.css">
+</head>
+<body>
+    <header class="fixed">
+        <div id="logo" onclick="slowScroll('#top')">
+            <span> <a href="index.html">На главную</a></span>
+        </div>
+    </header>
+        <div>
+            <script>
+                function hideNoDHTML() {
+                    document.getElementById('nodhtml').style.display = 'none';
+                    showQuestions();
+                }
+    
+                function showQuestions() {
+                    document.getElementById('questions').style.display = 'block';
+                    document.getElementById('results').style.display = 'none';
+                }
+    
+                function showResults() {
+                    var allQuestions = document.forms['testForm'].elements;
+                    var totalQuestions = 10; // Общее количество вопросов
+                    var rightAnsweredQuestions = 0;
+                    var resultText = '<br/><br/>';
+                
+                    for (var j = 0; j < totalQuestions; j++) {
+                        var questionIndex = j + 1;
+                        var questionElement = document.querySelector('input[type="radio"][name="question' + questionIndex + '"]:checked');
+                
+                        if (questionElement !== null && questionElement.getAttribute('data-correct') === 'true') {
+                            rightAnsweredQuestions++;
+                            resultText += 'Вопрос ' + questionIndex + ': <strong>Правильно</strong><br/>';
+                        } else {
+                            resultText += 'Вопрос ' + questionIndex + ': <strong>Неправильно</strong><br/>';
+                        }
+                    }
+                
+                    var isFormValid = validateForm();
+                    if (!isFormValid) {
+                        return;
+                    }
+                
+                    document.getElementById('questions').style.display = 'none';
+                    document.getElementById('results').style.display = 'block';
+                
+                    var resultsElement = document.getElementById('results');
+                    resultText += '<br/>Правильные ответы: ' + rightAnsweredQuestions + ' из ' + totalQuestions + '.<br/>';
+                
+                    if (rightAnsweredQuestions === totalQuestions) {
+                        resultText += 'Поздравляем с отличным результатом! Оценка 5.';
+                    }
+                
+                    resultsElement.innerHTML = '<h2>Результаты теста</h2>\n<p>' + resultText + '</p>';
+                
+                    // Отправка результатов на сервер
+                    var form = document.getElementById('testForm');
+                    var formData = new FormData(form);
+                    formData.append('score', rightAnsweredQuestions); // Добавляем счет в FormData
+                
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'handler.php', true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            // Обработка ответа сервера, если необходимо
+                        }
+                    };
+                    xhr.send(formData);
+                }
+                
+                
+                         
+                function validateForm() {
+                    var allQuestions = document.forms['testForm'].elements;
+                    var questionNames = [];
+                    var unansweredQuestions = 0;
+                
+                    // Получаем список имен вопросов
+                    for (var i = 0; i < allQuestions.length; i++) {
+                        var element = allQuestions[i];
+                        if (element.type === 'radio' && !questionNames.includes(element.name)) {
+                            questionNames.push(element.name);
+                        }
+                    }
+                
+                    // Проверяем, был ли отмечен ответ для каждого вопроса
+                    for (var j = 0; j < questionNames.length; j++) {
+                        var questionName = questionNames[j];
+                        var checkedOptions = document.querySelectorAll('input[type=radio][name="' + questionName + '"]:checked');
+                
+                        if (checkedOptions.length === 0) {
+                            unansweredQuestions++;
+                        }
+                    }
+                
+                    if (unansweredQuestions > 0) {
+                        alert('Пожалуйста, ответьте на все вопросы теста.');
+                        return false;
+                    }
+                
+                    return true;
+                }
+                
+                
+            </script>
+        </div>
+    
+
+    <div id="top">
+        <h2>Тесты по английскому</h2>
+    </div>
+    <div id="test" onload="hideNoDHTML();">
+        <div id="nodhtml"></div>
+     
+        <div id="questions"> <br>
+            <form id="testForm" action="" method="post">
+                <h3>This museum is in the centre of the town and near the market. It contains dolls, dolls' houses, books, games and pastimes, mechanical and constructional toys. In this collection there are toys made by all sorts of toy manufacturers from the most important to the smallest, including the most ordinary toys and the most precious. There are also records of children's pastimes over the last hundred and fifty years. 
+                    Most major manufacturing countries of Europe had toy industries in the last century; French and German factories produced millions of toys each year. Many collectors of toys think that the second half of the nineteenth century was the best period for toy production and the museum has many examples of toys from this period which are still in perfect condition. 
+                    There is now a growing interest in the toys of the 1920s and 1930s and as a result of this the museum has begun to build up a collection from these years. Visitors to the museum will find that someone is always available to answer questions - we hope you will visit us. Hours of opening 10.00-17.30 every day (except December 25 and 26). <br>
+                    
+                    1. This writing is from ... 
+                    </h2>
+                <p><input type="radio" name="question1" id="choice11" data-correct="false"/> <label for="choice11">a newspaper.</label></p>
+                <p><input type="radio" name="question1" id="choice12" data-correct="true"/> <label for="choice12">an advertisement.</label></p>
+                <p><input type="radio" name="question1" id="choice13" data-correct="false"/> <label for="choice13">f school history book.</label></p>
+                <p><input type="radio" name="question1" id="choice14" data-correct="false"/> <label for="choice14">a storybook.</label></p><br>
+         
+                <h3>2. What is the writer trying to do?</h2>
+                <p><input type="radio" name="question2" id="choice21" data-correct="false"/> <label for="choice21">To give advice.</label></p>
+                <p><input type="radio" name="question2" id="choice22" data-correct="false"/> <label for="choice22">To give opinions.</label></p>
+                <p><input type="radio" name="question2" id="choice23" data-correct="true"/> <label for="choice23">To give information.</label></p>
+                <p><input type="radio" name="question2" id="choice24" data-correct="false"/> <label for="choice24">No correct answer.</label></p><br>
+                
+                <h3>3. The museum has so many toys from the late 19th century because ... </h2>
+                <p><input type="radio" name="question3" id="choice31" data-correct="false"/> <label for="choice31">it is located in the middle of town.</label></p>
+                <p><input type="radio" name="question3" id="choice32" data-correct="false"/> <label for="choice32">it is located in the village.</label></p>
+                <p><input type="radio" name="question3" id="choice33" data-correct="true"/> <label for="choice33">visitors are interested in toys from that time.</label></p>
+                <p><input type="radio" name="question3" id="choice34" data-correct="false"/> <label for="choice34">no correct answer.</label></p><br>
+                
+                <h3>4. What period of toy manufacturing has increased attention?</h2>
+                <p><input type="radio" name="question4" id="choice41" data-correct="false"/> <label for="choice41">Every day except in December.</label></p>
+                <p><input type="radio" name="question4" id="choice42" data-correct="true"/> <label for="choice42">The 1920s and 1930s.</label></p>
+                <p><input type="radio" name="question4" id="choice43" data-correct="false"/> <label for="choice43">The 20th century.</label></p>
+                <p><input type="radio" name="question4" id="choice44" data-correct="false"/> <label for="choice44">No correct answear.</label></p><br>
+                
+                <h3>5. Which of the following advertisements would you find outside the Toy Museum?</h2>
+                <p><input type="radio" name="question5" id="choice51" data-correct="false"/> <label for="choice51">Toys of Ancient Civilizations</label></p>
+                <p><input type="radio" name="question5" id="choice52" data-correct="true"/> <label for="choice52">BEFORE TV!-a special exhibition of indoor gamer from 1890 to 1940</label></p>
+                <p><input type="radio" name="question5" id="choice53" data-correct="false"/> <label for="choice53">How Children Dressed 1600-1900 " Clothes for all Ages"</label></p>
+                <p><input type="radio" name="question5" id="choice54" data-correct="false"/> <label for="choice54">No correct answear</label></p><br>
+                 
+                <h3>6. Составьте слово
+                    A, e, h, m, r, s, t
+                    </h2>
+                <p><input type="radio" name="question6" id="choice61" data-correct="false"/> <label for="choice61">Marhest</label></p>
+                <p><input type="radio" name="question6" id="choice62" data-correct="false"/> <label for="choice62">Teshmar</label></p>
+                <p><input type="radio" name="question6" id="choice63" data-correct="true"/> <label for="choice63">Hamster</label></p>
+                <p><input type="radio" name="question6" id="choice64" data-correct="false"/> <label for="choice64">Shamter</label></p><br>
+                 
+                <h3>7. Поставьте глагол "To be" в правильную форму
+                    There ... two apples on the table.
+                    </h2>
+                <p><input type="radio" name="question7" id="choice71" data-correct="false"/> <label for="choice71">be</label></p>
+                <p><input type="radio" name="question7" id="choice72" data-correct="false"/> <label for="choice72">am</label></p>
+                <p><input type="radio" name="question7" id="choice73" data-correct="false"/> <label for="choice73">is</label></p>
+                <p><input type="radio" name="question7" id="choice74" data-correct="true"/> <label for="choice74">are</label></p>
+
+                <h3>8. Дополните вопрос.
+                    ... are you from?
+                </h2>
+                <p><input type="radio" name="question8" id="choice81" data-correct="true"/> <label for="choice81">Where</label></p>
+                <p><input type="radio" name="question8" id="choice82" data-correct="false"/> <label for="choice82">What</label></p>
+                <p><input type="radio" name="question8" id="choice83" data-correct="false"/> <label for="choice83">When</label></p>
+                <p><input type="radio" name="question8" id="choice84" data-correct="false"/> <label for="choice84">Which</label></p>
+                 
+                <h3>9. Составьте предложение.
+                    Well/play/football/I/very
+                </h2>
+                <p><input type="radio" name="question9" id="choice91" data-correct="false"/> <label for="choice91">I football very play well.</label></p>
+                <p><input type="radio" name="question9" id="choice92" data-correct="false"/> <label for="choice92">I play very football well.</label></p>
+                <p><input type="radio" name="question9" id="choice93" data-correct="false"/> <label for="choice93">I well football very play.</label></p>
+                <p><input type="radio" name="question9" id="choice94" data-correct="true"/> <label for="choice94">I play football very well.</label></p>
+                     
+                <h3>10. Поставьте существительное во множественное
+                    число.
+                    Library
+                </h2>
+                <p><input type="radio" name="question10" id="choice101" data-correct="false"/> <label for="choice101">Librarys</label></p>
+                <p><input type="radio" name="question10" id="choice102" data-correct="false"/> <label for="choice102">Libraryes</label></p>
+                <p><input type="radio" name="question10" id="choice103" data-correct="false"/> <label for="choice103">Libraryis</label></p>
+                <p><input type="radio" name="question10" id="choice104" data-correct="true"/> <label for="choice104">Libraries</label></p>
+                         
+                <p class="btn btn-primary">
+                    <input type="button" value="Показать мой результат" onclick="showResults();" />
+                    <input type="reset" value="Очистить форму" />
+                </p>
+            </form>
+        </div>
+        <div id="results"></div>
+        <br/><br/>
+    </div> 
+</body>
+</html>

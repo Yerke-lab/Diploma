@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education</title>
+    <link rel="stylesheet" href="css/test.css">
+</head>
+<body>
+    <header class="fixed">
+        <div id="logo" onclick="slowScroll('#top')">
+            <span> <a href="index.html">На главную</a></span>
+        </div>
+    </header>
+    <div>
+        <script>
+            function hideNoDHTML() {
+                document.getElementById('nodhtml').style.display = 'none';
+                showQuestions();
+            }
+
+            function showQuestions() {
+                document.getElementById('questions').style.display = 'block';
+                document.getElementById('results').style.display = 'none';
+            }
+
+            function showResults() {
+                var allQuestions = document.forms['testForm'].elements;
+                var totalQuestions = 10; // Общее количество вопросов
+                var rightAnsweredQuestions = 0;
+                var resultText = '<br/><br/>';
+            
+                for (var j = 0; j < totalQuestions; j++) {
+                    var questionIndex = j + 1;
+                    var questionElement = document.querySelector('input[type="radio"][name="question' + questionIndex + '"]:checked');
+            
+                    if (questionElement !== null && questionElement.getAttribute('data-correct') === 'true') {
+                        rightAnsweredQuestions++;
+                        resultText += 'Вопрос ' + questionIndex + ': <strong>Правильно</strong><br/>';
+                    } else {
+                        resultText += 'Вопрос ' + questionIndex + ': <strong>Неправильно</strong><br/>';
+                    }
+                }
+            
+                var isFormValid = validateForm();
+                if (!isFormValid) {
+                    return;
+                }
+            
+                document.getElementById('questions').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+            
+                var resultsElement = document.getElementById('results');
+                resultText += '<br/>Правильные ответы: ' + rightAnsweredQuestions + ' из ' + totalQuestions + '.<br/>';
+            
+                if (rightAnsweredQuestions === totalQuestions) {
+                    resultText += 'Поздравляем с отличным результатом! Оценка 5.';
+                }
+            
+                resultsElement.innerHTML = '<h2>Результаты теста</h2>\n<p>' + resultText + '</p>';
+            
+                // Отправка результатов на сервер
+                var form = document.getElementById('testForm');
+                var formData = new FormData(form);
+                formData.append('score', rightAnsweredQuestions); // Добавляем счет в FormData
+            
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'handler.php', true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Обработка ответа сервера, если необходимо
+                    }
+                };
+                xhr.send(formData);
+            }
+            
+            
+                     
+            function validateForm() {
+                var allQuestions = document.forms['testForm'].elements;
+                var questionNames = [];
+                var unansweredQuestions = 0;
+            
+                // Получаем список имен вопросов
+                for (var i = 0; i < allQuestions.length; i++) {
+                    var element = allQuestions[i];
+                    if (element.type === 'radio' && !questionNames.includes(element.name)) {
+                        questionNames.push(element.name);
+                    }
+                }
+            
+                // Проверяем, был ли отмечен ответ для каждого вопроса
+                for (var j = 0; j < questionNames.length; j++) {
+                    var questionName = questionNames[j];
+                    var checkedOptions = document.querySelectorAll('input[type=radio][name="' + questionName + '"]:checked');
+            
+                    if (checkedOptions.length === 0) {
+                        unansweredQuestions++;
+                    }
+                }
+            
+                if (unansweredQuestions > 0) {
+                    alert('Пожалуйста, ответьте на все вопросы теста.');
+                    return false;
+                }
+            
+                return true;
+            }
+            
+            
+        </script>
+    </div>
+
+
+    <div id="top">
+        <h2>Тесты по логике</h2>
+    </div>
+    <div id="test" onload="hideNoDHTML();">
+        <div id="nodhtml"></div>
+     
+        <div id="questions"> <br>
+            <form id="testForm" action="" method="post">
+                <h3>1. Моторная лодка шла 40 мин по течению реки и 1 час против течения и за это время прошла 37 км.
+                    Найдите скорость лодки в стоячей воде, если скорость течения реки равна 1,5 км/час</h3>
+                <p><input type="radio" name="question1" id="choice11" data-correct="true" /> <label for="choice11">20 км/ч</label></p>
+                <p><input type="radio" name="question1" id="choice12" data-correct="false" /> <label for="choice12">24,5 км/ч</label></p>
+                <p><input type="radio" name="question1" id="choice13" data-correct="false" /> <label for="choice13">25 км/ч</label></p>
+                <p><input type="radio" name="question1" id="choice14" data-correct="false" /> <label for="choice14">22,5 км/ч</label></p><br>
+
+                <h3>2. Найдите значение выражения: 202*87-102*87-50*87</h3>
+                <p><input type="radio" name="question2" id="choice21" data-correct="false"/> <label for="choice21">2735</label></p>
+                <p><input type="radio" name="question2" id="choice22" data-correct="false"/> <label for="choice22">4350</label></p>
+                <p><input type="radio" name="question2" id="choice23" data-correct="false"/> <label for="choice23">8700</label></p>
+                <p><input type="radio" name="question2" id="choice24" data-correct="true"/> <label for="choice24">4530</label></p><br>
+
+                <h3>3. Найдите число, оканчивающееся цифрой 1, которое больше чем 102, и меньше чем 121</h3>
+                <p><input type="radio" name="question3" id="choice31" data-correct="false"/> <label for="choice31">111</label></p>
+                <p><input type="radio" name="question3" id="choice32" data-correct="true"/> <label for="choice32">108</label></p>
+                <p><input type="radio" name="question3" id="choice33" data-correct="false"/> <label for="choice33">130</label></p>
+                <p><input type="radio" name="question3" id="choice34" data-correct="false"/> <label for="choice34">10</label></p><br>
+
+                <h3>4. Какую цифру нужно поставить за место звездочки 12*45, чтобы полученное число делилось на 9?</h3>
+                <p><input type="radio" name="question4" id="choice41" data-correct="false"/> <label for="choice41">8</label></p>
+                <p><input type="radio" name="question4" id="choice42" data-correct="true"/> <label for="choice42">6</label></p>
+                <p><input type="radio" name="question4" id="choice43" data-correct="false"/> <label for="choice43">5</label></p>
+                <p><input type="radio" name="question4" id="choice44" data-correct="false"/> <label for="choice44">7</label></p><br>
+
+                <h3>5. Сколько разных трехзначных чисел с разными цифрами можно составить, используя цифры 1, 2, 3, 4:
+                </h3>
+                <p><input type="radio" name="question5" id="choice51" data-correct="true"/> <label for="choice51">24</label></p>
+                <p><input type="radio" name="question5" id="choice52" data-correct="false"/> <label for="choice52">6</label></p>
+                <p><input type="radio" name="question5" id="choice53" data-correct="false"/> <label for="choice53">12</label></p>
+                <p><input type="radio" name="question5" id="choice54" data-correct="false"/> <label for="choice54">18</label></p><br>
+
+                <h3>6. Найдите следующее число:
+                    1, 1, 2, 3, 5, 8, 13, 21, ...
+                </h3>
+                <p><input type="radio" name="question6" id="choice61" data-correct="false"/> <label for="choice61">44</label></p>
+                <p><input type="radio" name="question6" id="choice62" data-correct="true"/> <label for="choice62">34</label></p>
+                <p><input type="radio" name="question6" id="choice63" data-correct="false"/> <label for="choice63">45</label></p>
+                <p><input type="radio" name="question6" id="choice64" data-correct="false"/> <label for="choice64">55</label></p><br>
+
+                <h3>7. Найдите нужное число:
+                    21(100)11
+                    17(64)9
+                    18(?)11
+                </h3>
+                <p><input type="radio" name="question7" id="choice71" data-correct="false"/> <label for="choice71">36</label></p>
+                <p><input type="radio" name="question7" id="choice72" data-correct="false"/> <label for="choice72">64</label></p>
+                <p><input type="radio" name="question7" id="choice73" data-correct="true"/> <label for="choice73">49</label></p>
+                <p><input type="radio" name="question7" id="choice74" data-correct="false"/> <label for="choice74">25</label></p>
+
+                <h3>8. Найдите нужное число:
+                    32(190)63
+                    17(92)29
+                    18(?)11
+                </h3>
+                <p><input type="radio" name="question8" id="choice81" data-correct="false"/> <label for="choice81">62</label></p>
+                <p><input type="radio" name="question8" id="choice82" data-correct="false"/> <label for="choice82">74</label></p>
+                <p><input type="radio" name="question8" id="choice83" data-correct="true"/> <label for="choice83">58</label></p>
+                <p><input type="radio" name="question8" id="choice84" data-correct="false"/> <label for="choice84">48</label></p>
+
+                <h3>9. Вставьте пропущенное число:
+                    3 6 5 10 9 ...?
+                </h3>
+                <p><input type="radio" name="question9" id="choice91" data-correct="false"/> <label for="choice91">10</label></p>
+                <p><input type="radio" name="question9" id="choice92" data-correct="false"/> <label for="choice92">15</label></p>
+                <p><input type="radio" name="question9" id="choice93" data-correct="true"/> <label for="choice93">18</label></p>
+                <p><input type="radio" name="question9" id="choice94" data-correct="false"/> <label for="choice94">12</label></p>
+
+                <h3>10. Найдите сумму А+В
+                    ВВВ-АВ=170
+                </h3>
+                <p><input type="radio" name="question10" id="choice101" data-correct="false"/> <label for="choice101">10</label></p>
+                <p><input type="radio" name="question10" id="choice102" data-correct="false"/> <label for="choice102">8</label></p>
+                <p><input type="radio" name="question10" id="choice103" data-correct="true"/> <label for="choice103">7</label></p>
+                <p><input type="radio" name="question10" id="choice104" data-correct="false"/> <label for="choice104">18</label></p>
+
+                <p class="btn btn-primary">
+                    <input type="button" value="Показать мой результат" onclick="showResults();" />
+                    <input type="reset" value="Очистить форму" />
+                </p>
+            </form>
+        </div>
+        <div id="results"></div>
+        <br/><br/>
+    </div> 
+</body>
+</html>
